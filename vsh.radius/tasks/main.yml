@@ -1,0 +1,39 @@
+---
+
+  - name: generate dhparam 4096
+    include_role:
+      name: gronke.dhparam
+    vars:
+      dhparam_size: 4096
+      dhparam_file: /etc/ssl/dhparam-4096.pem
+
+  - name: install freeradius
+    apt: name=freeradius state=present
+
+  - name: add freeradius to ssl-cert group
+    user: state=present
+          name="freerad"
+          groups="ssl-cert" append=yes
+
+  - name: clean default configuration
+    file: path="/etc/freeradius/3.0/" state=absent
+
+  - name: add freeradius configuration
+    copy: dest=/etc/freeradius/
+          src=freeradius/3.0
+          owner=freerad group=freerad mode=0644
+
+  - name: configure freeradius clients
+    template: dest=/etc/freeradius/3.0/clients.conf
+              src=freeradius/3.0/clients.conf.j2
+              owner=freerad group=freerad mode=0644
+
+  - name: configure freeradius
+    template: dest=/etc/freeradius/3.0/radiusd.conf
+              src=freeradius/3.0/radiusd.conf.j2
+              owner=freerad group=freerad mode=0644
+    notify:
+      - restart freeradius
+
+  - name: enable freeradius on boot
+    service: name=freeradius enabled=yes state=started

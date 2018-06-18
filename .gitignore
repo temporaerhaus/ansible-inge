@@ -1,0 +1,6 @@
+.vagrant
+vsh.ssh
+*.retry
+TODO
+ubuntu-bionic*
+vault

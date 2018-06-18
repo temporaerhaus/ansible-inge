@@ -1,0 +1,119 @@
+---
+- name: Make sure dehydrated dependencies are installed and up-to-date
+  package:
+    name:
+      - curl
+      - openssl
+      - jq
+    state: present
+
+- name: Check if dehydrated source dir doesn't exist
+  file:
+    path: /tmp/dehydrated
+    state: absent
+  tags: dehydrated
+
+- name: Create directory for dehydrated source
+  file:
+    path: /tmp/dehydrated
+    state: directory
+    mode: 0755
+  tags: dehydrated
+
+- name: Download dehydrated source
+  unarchive:
+    src: https://github.com/lukas2511/dehydrated/releases/download/v0.6.2/dehydrated-0.6.2.tar.gz
+    dest: /tmp/dehydrated
+    remote_src: yes
+  tags: dehydrated
+
+- name: Copy dehydrated executable to a location in PATH
+  copy:
+    remote_src: True
+    src: "/tmp/dehydrated/dehydrated-0.6.2/dehydrated"
+    dest: "/usr/local/bin"
+    mode: 0755
+  tags: dehydrated
+
+- name: Remove dehydrated source
+  file:
+    path: /tmp/dehydrated
+    state: absent
+  tags: dehydrated
+
+- name: Create directory for supporting dehydrated files
+  file:
+    path: "{{ dehydrated_dir }}"
+    state: directory
+    mode: 0755
+  tags: dehydrated
+
+- name: Copy config file
+  template:
+    src: config.j2
+    dest: "{{ dehydrated_dir }}/config"
+    owner: root
+    group: root
+    mode: 0644
+  tags: dehydrated
+
+- name: Copy domains file
+  template:
+    src: domains.j2
+    dest: "{{ dehydrated_dir }}/domains.txt"
+    owner: root
+    group: root
+    mode: 0644
+  tags: dehydrated
+
+- name: Copy hook script
+  copy:
+    src: cloudns-hook.sh
+    dest: "{{ dehydrated_dir }}"
+    mode: 0775
+  tags: dehydrated
+
+- name: Setting g+s on /etc/ssl/private
+  file:
+    path: /etc/ssl/private
+    state: directory
+    mode: "g=rxs"
+
+- name: Generate certificate
+  environment:
+    CLOUDNS_SUB_AUTH_ID: "{{ cloudns_sub_auth_id }}"
+    CLOUDNS_AUTH_PASSWORD: "{{ cloudns_auth_password }}"
+  shell:
+    cmd: "/usr/local/bin/dehydrated -c -t dns-01 --accept-terms --out {{ cert_output_dir }}"
+  register: cert_result
+  until: cert_result.rc == 0
+  retries: "{{ retry_count }}"
+  delay: "{{ retry_delay }}"
+  when: dehydrated_domains is defined and (dehydrated_domains|length>0)
+  tags: dehydrated
+
+- name: Add cronjob
+  cron:
+    user: root
+    cron_file: dehydrated
+    job: "/usr/local/bin/dehydrated -c -t dns-01 --accept-terms --out {{ cert_output_dir }}"
+    special_time: daily
+  tags: dehydrated
+
+- name: Add auth credential to cronjob
+  cron:
+    user: root
+    cron_file: dehydrated
+    env: yes
+    name: CLOUDNS_SUB_AUTH_ID
+    value: "{{ cloudns_sub_auth_id }}"
+  tags: dehydrated
+
+- name: Add password credential to cronjob
+  cron:
+    user: root
+    cron_file: dehydrated
+    env: yes
+    name: CLOUDNS_AUTH_PASSWORD
+    value: "{{ cloudns_auth_password }}"
+  tags: dehydrated

@@ -1,0 +1,11 @@
+---
+
+letsencrypt_url: "acme-staging-v02.api.letsencrypt.org"
+
+dehydrated_dir: "/etc/dehydrated"
+cert_output_dir: "/etc/ssl/private"
+
+retry_count: 3
+retry_delay: 30
+
+dehydrated_domains: []

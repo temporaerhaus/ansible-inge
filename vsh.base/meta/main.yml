@@ -1,0 +1,4 @@
+---
+dependencies:
+  - role: dev-sec.ssh-hardening
+  - role: jnv.unattended-upgrades

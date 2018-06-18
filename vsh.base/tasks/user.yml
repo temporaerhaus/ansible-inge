@@ -1,0 +1,28 @@
+---
+  # remove user when remove variable is defined
+  - name: remove user "{{ item.name }}"
+    user: state=absent remove=yes
+          name={{ item.name }}
+    when: item.state == 'absent'
+    with_items:
+      - "{{ users }}"
+
+  - shell: command -v bash
+    register: bash_path
+    changed_when: false
+
+  - name: create user "{{ item.name }}"
+    user: state=present
+          name="{{ item.name }}"
+          groups="adm,sudo" append=yes
+          shell={{ item.shell | default(bash_path.stdout) }}
+    with_items:
+      - "{{ users }}"
+    when: not item.state == 'absent'
+
+  - name: add authorized_keys from github for "{{ item.name }}"
+    authorized_key: user="{{ item.name }}" manage_dir=true key="https://github.com/{{ item.github }}.keys"
+                    state=present exclusive=yes
+    with_items:
+      - "{{ users }}"
+    when: item.state != 'absent' and item.github != ''

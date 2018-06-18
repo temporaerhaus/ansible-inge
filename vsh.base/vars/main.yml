@@ -1,0 +1,16 @@
+---
+
+users:
+  - { name: 'stk', github: 'stkdiretto', state: 'present' }
+  - { name: 'robbi5', github: 'robbi5', state: 'present' }
+
+# for: jnv.unattended-upgrades
+unattended_origins_patterns:
+  - 'origin=Ubuntu,archive=${distro_codename}-security'
+  - 'o=Ubuntu,a=${distro_codename}-updates'
+unattended_mail: sysadm@verschwoerhaus.de
+
+# for: dev-sec.ssh-hardening
+network_ipv6_enable: true
+sftp_enabled: true
+ssh_use_pam: true

@@ -1,0 +1,5 @@
+- src: dev-sec.ssh-hardening
+  version: 4.4.0
+- src: jnv.unattended-upgrades
+  version: v1.6.0
+- src: gronke.dhparam

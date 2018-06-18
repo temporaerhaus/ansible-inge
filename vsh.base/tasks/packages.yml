@@ -1,0 +1,19 @@
+---
+  - name: install a default set of packages
+    package:
+      name:
+        - vim
+        - nano
+        - htop
+        - git
+        - tmux
+        - screen
+        - byobu
+        - ncdu
+        - moreutils
+        - apt-transport-https
+        - smartmontools
+        - zip
+        - unzip
+      state: present
+    tags: packages

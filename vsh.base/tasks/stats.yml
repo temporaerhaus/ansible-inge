@@ -1,0 +1,9 @@
+---
+  - debconf: name=sysstat question='sysstat/enable' value=true vtype='boolean'
+
+  - name: install stats packages
+    apt: name={{ item }} state=latest update_cache=yes
+    tags: packages
+    with_items:
+     - vnstat
+     - sysstat

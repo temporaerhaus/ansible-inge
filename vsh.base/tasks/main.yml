@@ -1,0 +1,12 @@
+---
+  - import_tasks: packages.yml
+  - import_tasks: molly-guard.yml
+  - import_tasks: stats.yml
+
+  - import_tasks: user.yml user={{ users }}
+    tags: user
+
+  - name: adding message of the day
+    template: dest=/etc/motd
+              src=motd
+              owner=root group=root mode=0644

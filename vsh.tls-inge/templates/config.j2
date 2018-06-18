@@ -1,0 +1,8 @@
+# make cert/keys readable by group
+umask u=rw,g=rx,o=
+
+CA="https://{{ letsencrypt_url }}/directory"
+CA_TERMS="https://{{ letsencrypt_url }}/terms"
+CHALLENGETYPE="dns-01"
+HOOK="{{ dehydrated_dir }}/cloudns-hook.sh"
+CONTACT_EMAIL="{{ dehydrated_contact_email }}"
