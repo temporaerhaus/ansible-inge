@@ -1,0 +1,21 @@
+{% set ldap_domain = openldap_server_basedn %}
+dn: {{ ldap_domain }}
+objectClass: domain
+dc: {{ openldap_server_domain_name.split('.')[0] }}
+
+dn: cn=Manager,{{ ldap_domain }}
+cn: Manager
+description: LDAP administrator
+objectClass: organizationalRole
+objectClass: top
+roleOccupant: {{ ldap_domain }}
+
+dn: ou=Users,{{ ldap_domain }}
+ou: Users
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Group,{{ ldap_domain }}
+ou: Group
+objectClass: top
+objectClass: organizationalUnit

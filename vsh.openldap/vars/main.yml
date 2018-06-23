@@ -1,0 +1,58 @@
+---
+
+openldap_server_domain_name: verschwoerhaus.de
+openldap_server_rootpw: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66643664646535353631393834386263653466373835643330626662643132653762323330356562
+          3463386163663638663530333664306233623231373338350a393161666338363530343130653032
+          63383538353631336133636565626338656332313265376534623563656466303639633466393663
+          3431393732303732350a333566353263323064663831653932373134353566363332633466653864
+          34326561333761633533326235323831663762306461346135656439316432313235
+
+# our OID: 1.3.6.1.4.1.52202
+#
+# OID Assignment:
+# 1.3.6.1.4.1.xxxxx Organization's OID
+# 1.3.6.1.4.1.xxxxx.1 SNMP Elements
+# 1.3.6.1.4.1.xxxxx.2 LDAP Elements
+# 1.3.6.1.4.1.xxxxx.2.1 AttributeTypes
+# 1.3.6.1.4.1.xxxxx.2.1.1 x-my-Attribute
+# 1.3.6.1.4.1.xxxxx.2.2 ObjectClasses
+# 1.3.6.1.4.1.xxxxx.2.2.1 x-my-ObjectClass
+
+openldap_server_acl:
+  - what: "attrs=userPassword"
+    directives:
+      - by: self
+        permission: write
+      - by: anonymous
+        permission: auth
+      - by: dn.base="{{ openldap_server_rootdn }}"
+        permission: write
+      - by: "*"
+        permission: read
+  - what: "attrs=rfidUid"
+    directives:
+      - by: self
+        permission: write
+      - by: anonymous
+        permission: search
+      - by: dn.base="{{ openldap_server_rootdn }}"
+        permission: write
+      - by: "*"
+        permission: read
+  - what: "attrs=shadowLastChange"
+    directives:
+      - by: self
+        permission: write
+      - by: "*"
+        permission: read
+  - what: "*"
+    directives:
+      - by: self
+        permission: write
+      - by: dn.base="{{ openldap_server_rootdn }}"
+        permission: write
+      - by: "*"
+        permission: read
+

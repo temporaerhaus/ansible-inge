@@ -5,5 +5,5 @@
     - role: vsh.base
     - role: vsh.tls-inge
     - role: vsh.radius
-    #- role: vsh.openldap
+    - role: vsh.openldap
     #- role: dumbaz.web2ldap

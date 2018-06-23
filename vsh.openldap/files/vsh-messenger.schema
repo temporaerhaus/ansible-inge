@@ -1,0 +1,17 @@
+#
+# VSH Messenger Account schema
+#
+
+# octetString SYNTAX
+attributetype ( 1.3.6.1.4.1.52202.2.1.2 NAME 'slackUid'
+	DESC 'MANDATORY: Slack User ID'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44 SINGLE-VALUE
+	)
+
+# printableString SYNTAX yes|no
+objectclass ( 1.3.6.1.4.1.52202.2.2.2 NAME 'messengerAccount' SUP top AUXILIARY
+	DESC 'MANDATORY: Messenger Account objectclass'
+	MUST uid
+	MAY slackUid
+	)
