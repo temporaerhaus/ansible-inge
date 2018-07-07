@@ -3,6 +3,7 @@
 users:
   - { name: 'stk', github: 'stkdiretto', state: 'present' }
   - { name: 'robbi5', github: 'robbi5', state: 'present' }
+  - { name: 'jaydi', state: 'present', public_key: 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLYuzhkm5BfK0VECqjHNkvGTrBL5eA/okePKodqpiXvdJtRvhkws9ETkM+6e4FPz+UGU0VThJNZGEMCwIwkcPNQ='}
 
 # for: jnv.unattended-upgrades
 unattended_origins_patterns:

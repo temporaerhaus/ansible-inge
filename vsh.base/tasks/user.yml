@@ -20,9 +20,16 @@
       - "{{ users }}"
     when: not item.state == 'absent'
 
-  - name: add authorized_keys from github for "{{ item.name }}"
-    authorized_key: user="{{ item.name }}" manage_dir=true key="https://github.com/{{ item.github }}.keys"
-                    state=present exclusive=yes
+  - name: add authorized_keys for "{{ item.name }}"
+    authorized_key: user="{{ item.name }}" manage_dir=true key="{{ item.public_key }}"
+                    state=present
     with_items:
       - "{{ users }}"
-    when: item.state != 'absent' and item.github != ''
+    when: item.state != 'absent' and item.public_key is defined and item.public_key != ''
+
+  - name: add authorized_keys from github for "{{ item.name }}"
+    authorized_key: user="{{ item.name }}" manage_dir=true key="https://github.com/{{ item.github }}.keys"
+                    state=present
+    with_items:
+      - "{{ users }}"
+    when: item.state != 'absent' and item.github is defined and item.github != ''
