@@ -15,5 +15,6 @@
         - smartmontools
         - zip
         - unzip
+        - zsh
       state: present
     tags: packages
