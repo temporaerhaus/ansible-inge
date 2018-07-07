@@ -6,4 +6,5 @@
     - role: vsh.tls-inge
     - role: vsh.radius
     - role: vsh.openldap
+    - role: vsh.tftp
     #- role: dumbaz.web2ldap

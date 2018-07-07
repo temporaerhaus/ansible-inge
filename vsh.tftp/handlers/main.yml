@@ -1,0 +1,3 @@
+---
+- name: restart atftpd
+  service: name=atftpd state=restarted enabled=yes

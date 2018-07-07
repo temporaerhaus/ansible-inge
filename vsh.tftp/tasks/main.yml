@@ -1,0 +1,20 @@
+---
+- name: Install the tftp server
+  package:
+    name:
+      - atftpd
+    state: present
+
+- name: Disable usage of inetd
+  lineinfile:
+    path: /etc/default/atftpd
+    regexp: '^USE_INETD='
+    line: 'USE_INETD=false'
+  notify:
+    - restart atftpd
+
+- name: Download netboot.xyz
+  get_url:
+    url: https://boot.netboot.xyz/ipxe/netboot.xyz.kpxe
+    dest: /srv/tftp/netboot.xyz.kpxe
+    mode: 0644
