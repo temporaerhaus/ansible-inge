@@ -1,6 +1,6 @@
 ---
 
-radius_client_ip: 192.168.8.0/22
+radius_client_ip: 129.143.87.250
 radius_client_secret: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           38643738373930333662636339663865383339353165346132353034613732333061343834623266
